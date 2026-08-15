@@ -1,0 +1,34 @@
+# Конфиг с доступами к почте
+config.json
+
+# Готовые отчёты.
+# Игнорируем содержимое, а не саму папку: git не умеет возвращать файл
+# обратно, если исключена вся директория целиком.
+out/*
+!out/.gitkeep
+
+# Базы конвейера
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Выгрузки из реестров
+*.xlsx
+*.xls
+data/*
+!data/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Служебное
+.DS_Store
+*.log
+.idea/
+.vscode/
