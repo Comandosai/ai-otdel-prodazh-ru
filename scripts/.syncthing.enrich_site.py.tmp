@@ -928,15 +928,6 @@ def _cli(argv):
         else:
             source = "сайт не найден"
             confidence = 0.0
-        # Почта без MX-записи почти наверняка не примет письмо. mx_ok is
-        # False понижает уверенность до low (report.py: < 0.5), mx_ok is
-        # None значит «не проверяли» (нет nslookup в системе), уверенность
-        # в этом случае не трогаем.
-        email_addr = data.get("email")
-        if email_addr and "@" in email_addr:
-            mx_ok = has_mx(email_addr.split("@", 1)[1])
-            if mx_ok is False:
-                confidence = min(confidence, 0.3)
         if not data.get("site"):
             print("    %-13s сайт не найден" % record.get("inn"))
         else:
