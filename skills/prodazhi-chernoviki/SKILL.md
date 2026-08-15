@@ -60,7 +60,7 @@ python3 "$PRODAZHI/scripts/drafts.py" --db data/leads.db --dry-run --out out/dra
 
 ```bash
 PRODAZHI="$HOME/.claude/tools/prodazhi"; [ -d "$PRODAZHI/scripts" ] || PRODAZHI="$(pwd)"
-python3 "$PRODAZHI/scripts/stoplist.py" --db data/leads.db --add 1650027925 --reason "просили не писать"
+python3 "$PRODAZHI/scripts/stoplist.py" --db data/leads.db --add 7712345678 --reason "просили не писать"
 ```
 
 Dry-run обязателен, даже если человек уже видел письма в `out/pisma.html`. Причина простая: отчёт показывает текст, а файл показывает **письмо целиком**, вместе с заголовками, кодировкой темы и подписью. Именно там вылезают проблемы, которых в отчёте не видно.

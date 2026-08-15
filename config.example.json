@@ -35,7 +35,7 @@
     "trebovat_sajt": true,
     "trebovat_sajt_comment": "Без сайта нечего диагностировать и некуда писать. Внимание: БЕСПЛАТНО этот признак не проверяется. Колонка WWW в выгрузке реестра МСП заполняется предпринимателем добровольно и в проверенной выборке была пустой целиком, так что наличие сайта выясняется только на шаге обогащения, уже запросами.",
     "isklyuchit_inn": [],
-    "isklyuchit_inn_comment": "Ручной стоп-лист: текущие клиенты, конкуренты, кто просил не писать. Отсюда список переносится в таблицу stoplist командой: python3 scripts/stoplist.py --db data/leads.db --import-config. Просьбы «не пишите мне» добавляйте сразу в таблицу: python3 scripts/stoplist.py --db data/leads.db --add 1650027925 --reason 'просили не писать'."
+    "isklyuchit_inn_comment": "Ручной стоп-лист: текущие клиенты, конкуренты, кто просил не писать. Отсюда список переносится в таблицу stoplist командой: python3 scripts/stoplist.py --db data/leads.db --import-config. Просьбы «не пишите мне» добавляйте сразу в таблицу: python3 scripts/stoplist.py --db data/leads.db --add 7712345678 --reason 'просили не писать'."
   },
 
   "istochniki": {

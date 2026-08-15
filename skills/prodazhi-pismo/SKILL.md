@@ -129,7 +129,7 @@ description: Пишет холодные письма на проверенны�
 
 ```bash
 PRODAZHI="$HOME/.claude/tools/prodazhi"; [ -d "$PRODAZHI/scripts" ] || PRODAZHI="$(pwd)"
-python3 "$PRODAZHI/scripts/stoplist.py" --db data/leads.db --add 1650027925 --reason "ответили стоп"
+python3 "$PRODAZHI/scripts/stoplist.py" --db data/leads.db --add 7712345678 --reason "ответили стоп"
 ```
 
 После этого письмо этой компании не соберётся (`write_letter.py` ставит блокировку) и уже написанное письмо в черновики не уедет (`drafts.py` пропускает его и меняет статус на `stop_list`). Ручной список из `config.json`, поле `otsev.isklyuchit_inn`, попадает в ту же таблицу автоматически.
