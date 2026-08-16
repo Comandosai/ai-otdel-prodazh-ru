@@ -85,11 +85,9 @@ DEFAULT_TEMPLATE = u"""Тема: {{subject}}
 
 {{pain_line}}
 
-Мы возим грузы по Татарстану и в соседние регионы, машины свои. \
-Если сейчас логистику закрывает подрядчик, могу посчитать ваш маршрут \
-и прислать цифры для сравнения, без обязательств.
+{{sender.offer}}
 
-Ответьте одной строкой, какое направление возите чаще всего, и я пришлю расчёт.
+{{sender.cta}}
 
 {{sender.signature}}
 
@@ -110,6 +108,8 @@ DEFAULT_SENDER = {
     "site": "",
     "signature": "",
     "unsubscribe": DEFAULT_UNSUBSCRIBE,
+    "offer": "",
+    "cta": "",
 }
 
 
@@ -141,12 +141,16 @@ def load_sender(config_path=None):
     """Подпись отправителя из config.json.
 
     Основной вид конфига описан в config.example.json, блок «pisma»:
-    ot_kogo_imya, ot_kogo_kompaniya, ot_kogo_telefon, podpis, otpiska.
-    Короткий английский блок «sender» тоже понимается, он удобнее в тестах.
+    ot_kogo_imya, ot_kogo_kompaniya, ot_kogo_telefon, podpis, otpiska,
+    а также offer и cta: это ниша пользователя, сам продукт её не
+    диктует. Короткий английский блок «sender» тоже понимается, он
+    удобнее в тестах.
 
     Если подпись в конфиге не заполнена, signature останется пустой, слот
     в шаблоне не закроется и валидатор не выпустит письмо. Это нарочно:
-    лучше остановить прогон, чем разослать письма с чужой подписью.
+    лучше остановить прогон, чем разослать письма с чужой подписью. Ровно
+    то же самое с offer и cta: пустое поле оставляет {{sender.offer}} или
+    {{sender.cta}} в тексте письма, и письмо не пройдёт валидацию.
     """
     path = config_path or os.environ.get("AIOP_CONFIG") or find_config()
     try:
@@ -166,6 +170,10 @@ def load_sender(config_path=None):
         sender["signature"] = str(pisma["podpis"]).replace("\\n", "\n")
     if pisma.get("otpiska"):
         sender["unsubscribe"] = str(pisma["otpiska"]).replace("\\n", "\n")
+    if pisma.get("offer"):
+        sender["offer"] = str(pisma["offer"]).replace("\\n", "\n")
+    if pisma.get("cta"):
+        sender["cta"] = str(pisma["cta"]).replace("\\n", "\n")
     pochta = cfg.get("pochta") or {}
     if pochta.get("login"):
         sender["email"] = pochta["login"]
@@ -439,6 +447,17 @@ def render_letter(template, context):
     Так и задумано: незакрытый слот увидит валидатор и не выпустит письмо.
     Пустой pain_line это не сбой шаблона, а сигнал, что писать пока не о чем:
     у компании не нашлось ни одной боли, и повода для письма тоже нет.
+
+    Ровно тот же механизм закрывает нишу продукта. Продукт универсальный
+    (конвейер холодной лидогенерации для любого B2B), поэтому в шаблоне
+    нет зашитого оффера: то, что вы продаёте, и вопрос в конце письма
+    подставляются слотами {{sender.offer}} и {{sender.cta}} из config.json
+    (блок pisma, поля offer и cta, см. config.example.json). Если поле
+    пустое, _dig вернёт None (или пустую строку), repl() ниже сработает
+    по ветке value in (None, "", []) и оставит {{sender.offer}} или
+    {{sender.cta}} в тексте письма буквально. validate_letter() ловит это
+    правилом PLACEHOLDER_PATTERNS («двойные фигурные скобки») и не даёт
+    письму уйти дальше черновика, пока пользователь не опишет свою нишу.
     """
     def repl(match):
         value = _dig(context, match.group(1))
